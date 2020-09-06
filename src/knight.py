@@ -1,7 +1,7 @@
 from typing import Tuple
 import pygame
 
-class Horse:
+class Knight:
 
     x: int                      # Posicion en el eje X del caballo
     y: int                      # Posicion en el eje Y del caballo

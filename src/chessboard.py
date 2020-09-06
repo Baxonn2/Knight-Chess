@@ -1,6 +1,6 @@
 from typing import List
 from src.player import Player
-from src.horse import Horse
+from src.knight import Knight
 from src.state import State
 import pygame
 
@@ -9,7 +9,7 @@ class Chessboard:
     skin: pygame.image
 
     size = (8, 8)
-    board: List[List[Horse]]
+    board: List[List[Knight]]
 
     def __init__(self, skin: pygame.image, width: int, height: int):
         self.board = []
@@ -21,7 +21,7 @@ class Chessboard:
         self.skin = skin
         self.skin = pygame.transform.scale(self.skin, (width, height))
 
-    def move(self, player: Player, horse_id: int, move_id: int):
+    def move(self, player: Player, knight_id: int, move_id: int):
         """
         Mueve el caballo a una posicion determinada, haciendo todo lo necesario
         que implica el movimiento del caballo. Como lo es comerse a un caballo,
@@ -29,7 +29,7 @@ class Chessboard:
 
         Args:
             player (Player): Jugador que está realizando el movimiento.
-            horse_id (int): Identificador de caballo que se esta moviendo.
+            knight_id (int): Identificador de caballo que se esta moviendo.
             move_id (int): Identificador del movimiento del caballo.
 
         Raises:
@@ -39,57 +39,57 @@ class Chessboard:
                        caballo no es valido.
         """
         # Obteniendo jugador y caballo
-        horse = player.get_horse(horse_id)
+        knight = player.get_knight(knight_id)
         
         # ? Prueba
-        x, y = horse.get_position()
-        horse2 = self.board[y][x]
-        x2, y2 = horse2.get_position()
-        if not horse2 == horse:
+        x, y = knight.get_position()
+        knight2 = self.board[y][x]
+        x2, y2 = knight2.get_position()
+        if not knight2 == knight:
             import sys
-            print(f"IDS: {horse.id_} {horse2.id_}")
+            print(f"IDS: {knight.id_} {knight2.id_}")
             print(f'POS: ({x},{y}) ({x2},{y2})')
             print("Error, son distintos")
             self.print_board()
             #sys.exit()
 
-        if not horse.alive:
+        if not knight.alive:
             raise NameError("CaballoMuerto")
 
         # Obtieniendo posiciones del caballo
-        x, y = horse.get_position()
-        nx, ny = horse.get_movement(move_id)
+        x, y = knight.get_position()
+        nx, ny = knight.get_movement(move_id)
         
         if ny < 0 or ny >= len(self.board) or nx < 0 or nx >= len(self.board[ny]):
             raise NameError("MovimientoFueraDelTablero")
 
-        other_horse = self.board[ny][nx]
-        if other_horse is None:
+        other_knight = self.board[ny][nx]
+        if other_knight is None:
             self.board[y][x] = None
-            self.board[ny][nx] = horse
-            horse.set_position(nx, ny)
-        elif player.is_enemy(other_horse):
+            self.board[ny][nx] = knight
+            knight.set_position(nx, ny)
+        elif player.is_enemy(other_knight):
             player.add_point()
             self.board[y][x] = None
-            self.board[ny][nx] = horse
-            horse.set_position(nx, ny)
-            other_horse.alive = False
+            self.board[ny][nx] = knight
+            knight.set_position(nx, ny)
+            other_knight.alive = False
         else: 
             # Este error se gatilla cuando se intenta ir a una casilla con un
             # aleado en ella.
             raise NameError("MovimientoInvalido")
 
-    def add_horse(self, horse: Horse):
+    def add_knight(self, knight: Knight):
         """
         Agrega un nuevo caballo al tablro
 
         Args:
-            horse (Horse): El nuevo caballo que se quiere agregar al tablero
+            knight (Knight): El nuevo caballo que se quiere agregar al tablero
         """
-        x = horse.x
-        y = horse.y
+        x = knight.x
+        y = knight.y
 
-        self.board[y][x] = horse
+        self.board[y][x] = knight
 
     def get_state(self, player: Player, enemy_player: Player) -> State:
         """
@@ -103,36 +103,36 @@ class Chessboard:
         for _ in range(8):
             ids.append([None]*8)
 
-        my_horses = []
+        my_knights = []
         for _ in range(8):
-            my_horses.append([None]*8)
+            my_knights.append([None]*8)
 
-        enemy_horses = []
+        enemy_knights = []
         for _ in range(8):
-            enemy_horses.append([None]*8)
+            enemy_knights.append([None]*8)
         
-        my_horses_dict = {}
-        enemy_horses_dict = {}
+        my_knights_dict = {}
+        enemy_knights_dict = {}
 
 
         # Cargando estado
-        for id_horse, horse in player.horses.items():
-            if not horse.alive:
+        for id_knight, knight in player.knights.items():
+            if not knight.alive:
                 continue
-            ids[horse.y][horse.x] = id_horse
-            my_horses[horse.y][horse.x] = id_horse
-            my_horses_dict[id_horse] = (horse.x, horse.y)
+            ids[knight.y][knight.x] = id_knight
+            my_knights[knight.y][knight.x] = id_knight
+            my_knights_dict[id_knight] = (knight.x, knight.y)
 
-        for id_horse, horse in enemy_player.horses.items():
-            if not horse.alive:
+        for id_knight, knight in enemy_player.knights.items():
+            if not knight.alive:
                 continue
-            ids[horse.y][horse.x] = id_horse
-            enemy_horses[horse.y][horse.x] = id_horse
-            enemy_horses_dict[id_horse] = (horse.x, horse.y)
+            ids[knight.y][knight.x] = id_knight
+            enemy_knights[knight.y][knight.x] = id_knight
+            enemy_knights_dict[id_knight] = (knight.x, knight.y)
 
         # Creando y retornando el estado
-        return State(ids, my_horses, my_horses_dict,
-                     enemy_horses, enemy_horses_dict)
+        return State(ids, my_knights, my_knights_dict,
+                     enemy_knights, enemy_knights_dict)
 
     def draw(self, screen: pygame.surface.Surface):
         """
@@ -146,9 +146,9 @@ class Chessboard:
 
     def print_board(self):
         for linea in self.board:
-            for horse in linea:
-                if horse is None:
+            for knight in linea:
+                if knight is None:
                     print("None", end=" ")
                 else:
-                    print(horse.id_, end=" ")
+                    print(knight.id_, end=" ")
             print()

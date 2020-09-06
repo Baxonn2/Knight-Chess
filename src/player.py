@@ -1,5 +1,5 @@
 from typing import Dict
-from src.horse import Horse
+from src.knight import Knight
 from src.state import State
 from src.action import Action
 from src.controllers.controller import Controller
@@ -9,7 +9,7 @@ import datetime
 class Player:
 
     # Variables de estados del jugador
-    horses: Dict[int, Horse]        # Diccionario de caballos aliados
+    knights: Dict[int, Knight]        # Diccionario de caballos aliados
     point: int                      # Cantidad de caballos comidos
 
     # Identificadores del player
@@ -20,44 +20,44 @@ class Player:
     controller: Controller
 
     def __init__(self, player_number: int, controller: Controller):
-        self.horses = {}
+        self.knights = {}
         self.point = 0
         self.player_number = player_number
         self.controller = controller
 
-    def add_horse(self, horse: Horse):
+    def add_knight(self, knight: Knight):
         """
         Agrega un nuevo caballo al jugador
 
         Args:
-            horse (Horse): Caballo que se quiere agregar al jugador
+            knight (Knight): Caballo que se quiere agregar al jugador
         """
-        self.horses[horse.id_] = horse
+        self.knights[knight.id_] = knight
 
-    def get_horse(self, horse_id: int) -> Horse:
+    def get_knight(self, knight_id: int) -> Knight:
         """
         Obtiene un caballo dada un identificador
 
         Args:
-            horse_id (int): Identificador del caballo que se quiere obtener
+            knight_id (int): Identificador del caballo que se quiere obtener
 
         Returns:
-            Horse: Retorna el caballo si es que se encuentra y None en caso de
+            Knight: Retorna el caballo si es que se encuentra y None en caso de
                    que no exista dicho caballo.
         """
-        return self.horses[horse_id]
+        return self.knights[knight_id]
 
-    def is_enemy(self, horse: Horse) -> bool:
+    def is_enemy(self, knight: Knight) -> bool:
         """
         Comprueba si el caballo ingresado como parametro es un enemigo o no.
 
         Args:
-            self (horse): Caballo que podria o no ser enemigo
+            self (knight): Caballo que podria o no ser enemigo
 
         Returns:
             bool: Retorna True si es un caballo enemigo y False si es aliado.
         """
-        return horse.id_ not in self.horses
+        return knight.id_ not in self.knights
 
     def add_point(self):
         """
@@ -73,9 +73,9 @@ class Player:
             screen (pygame.surface.Surface): Superficie donde se van a dibujar
                                              los caballos.
         """
-        for horse in self.horses.values():
-            if horse.alive:
-                horse.draw(screen)
+        for knight in self.knights.values():
+            if knight.alive:
+                knight.draw(screen)
 
     def get_action(self, state: State, time_less: datetime.timedelta) -> Action:
         """

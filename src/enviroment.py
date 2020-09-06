@@ -4,7 +4,7 @@ import threading
 import time
 from src.player import Player
 from src.chessboard import Chessboard
-from src.horse import Horse
+from src.knight import Knight
 from src.timer import Timer
 from src.controllers.controller import Controller
 
@@ -70,7 +70,7 @@ class Enviroment:
                               Controller(player1_command))
         self.player2 = Player(Player.PLAYER_TWO,
                               Controller(player2_command))
-        self._add_horses()
+        self._add_knights()
         self.player1_turn = True
 
         self.done = False
@@ -79,7 +79,7 @@ class Enviroment:
 
         self.timer = Timer()
 
-    def _add_horses(self):
+    def _add_knights(self):
         """
         Agrega los caballos iniciales a los jugadores y al tablero
         """
@@ -112,11 +112,11 @@ class Enviroment:
                 y = int(nc / 8) + desp_y
 
                 # Creando caballo
-                horse = Horse(x, y, skin, width, height, id_caballo)
+                knight = Knight(x, y, skin, width, height, id_caballo)
 
                 # Agregando caballo
-                player.add_horse(horse)
-                self.chessboard.add_horse(horse)
+                player.add_knight(knight)
+                self.chessboard.add_knight(knight)
 
     def launch_turns(self):
         while not self.winner and not self.done:
@@ -136,11 +136,11 @@ class Enviroment:
                 try:
                     action = player.get_action(state, self.timer.current_time())
                     # print("Action: ")
-                    # print(action.horse_id)
-                    # print(action.horse_movement)
+                    # print(action.knight_id)
+                    # print(action.knight_movement)
 
                     # Aplicando accion
-                    self.chessboard.move(player, action.horse_id, action.horse_movement)
+                    self.chessboard.move(player, action.knight_id, action.knight_movement)
                     good_movement = True
                 except NameError as e:
                     print(f"Player {player.player_number} error: {e}")

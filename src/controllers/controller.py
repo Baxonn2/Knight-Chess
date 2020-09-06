@@ -50,5 +50,5 @@ class Controller:
 
         result_json = json.loads(self.result)
 
-        return Action(horse_id=int(result_json['horse_id']),
-                      horse_movement=int(result_json['horse_movement']))
+        return Action(knight_id=int(result_json['knight_id']),
+                      knight_movement=int(result_json['knight_movement']))
