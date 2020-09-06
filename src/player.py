@@ -4,6 +4,7 @@ from src.state import State
 from src.action import Action
 from src.controllers.controller import Controller
 import pygame
+import datetime
 
 class Player:
 
@@ -76,7 +77,7 @@ class Player:
             if horse.alive:
                 horse.draw(screen)
 
-    def get_action(self, state: State) -> Action:
+    def get_action(self, state: State, time_less: datetime.timedelta) -> Action:
         """
         Obtiene una accion usando el controlador inicializado en el constructor
         del player
@@ -87,4 +88,4 @@ class Player:
         Returns:
             Action: Accion que se va a aplicar
         """
-        return self.controller.get_action(state)
+        return self.controller.get_action(state, time_less)

@@ -77,6 +77,8 @@ class Enviroment:
         self.winner = False
         self.play_number = 0
 
+        self.timer = Timer()
+
     def _add_horses(self):
         """
         Agrega los caballos iniciales a los jugadores y al tablero
@@ -127,10 +129,12 @@ class Enviroment:
             # Obteniendo accion del jugador
             state = self.chessboard.get_state(player, other_player)
 
+            self.timer.reset()
             good_movement = False
+            time_out = False
             while not good_movement:
                 try:
-                    action = player.get_action(state)
+                    action = player.get_action(state, self.timer.current_time())
                     # print("Action: ")
                     # print(action.horse_id)
                     # print(action.horse_movement)
@@ -140,12 +144,29 @@ class Enviroment:
                     good_movement = True
                 except NameError as e:
                     print(f"Player {player.player_number} error: {e}")
-                    pass  # TODO: Pensar que hacer con esto
+
+                    # Si el controlador se demora mas de 5 segundos queda
+                    # eliminado
+                    if e.__str__() == "TimeOut":
+                        time_out = True
+                        break
 
                 except Exception as e:
                     print("Error raro")
                     print(e)
             
+            # Registrando eliminacion por time out
+            if time_out or not good_movement:
+                self.winner = True
+                self.the_winner = other_player.player_number
+                
+                # Actualizando jugador ganador
+                self.player_win = self.player1_win if self.the_winner == \
+                    Player.PLAYER_ONE else self.player2_win
+
+                print(f"Player {player.player_number} pierde por time out")
+
+            # Registrando ganador
             if player.point == 16:
                 self.winner = True
                 self.the_winner = player.player_number
@@ -163,7 +184,6 @@ class Enviroment:
         Comprende el ciclo del juego. Este finaliza cuando alguno de los
         jugadores gana.
         """
-        timer = Timer()
         t = threading.Thread(target=self.launch_turns)
         t.start()
 
@@ -187,7 +207,7 @@ class Enviroment:
             player.draw(self.screen)
 
             # Dibujando timer
-            timer.draw(self.screen)
+            self.timer.draw(self.screen)
 
             # Dibujando ganador de la partida
             if self.winner:
