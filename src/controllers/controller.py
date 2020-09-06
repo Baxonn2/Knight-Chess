@@ -14,6 +14,7 @@ class Controller:
 
     def get_action(self, state: State) -> Action:
         my_json = json.dumps(state.__dict__)
+        my_json = my_json.translate(str.maketrans({'"': r'\"'}))
         command = f"{self.command_init} '{my_json}' {self.command_end}"
         
         # El resultado tiene que ser un print de un json
