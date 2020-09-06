@@ -7,7 +7,7 @@ if __name__ == "__main__":
 
     # Cambiando caracter raro de comillas por doble comillas
     #! Probar si esto funciona en todos los SO
-    state_json = state_json.replace(r'\"', '"') 
+    state_json = state_json.replace(r'\"', '"')
 
     state = json.loads(state_json)
 
@@ -20,4 +20,6 @@ if __name__ == "__main__":
     }
 
     # Imprimiendo resultado
+    #! Puede que la entrega del resultado tambien tenga que se procesada de la
+    #! misma forma que la entrda
     print(json.dumps(result))

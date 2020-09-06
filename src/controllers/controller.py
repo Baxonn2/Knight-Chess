@@ -18,9 +18,9 @@ class Controller:
         command = f"{self.command_init} '{my_json}' {self.command_end}"
         
         # El resultado tiene que ser un print de un json
-        # print(f"Ejecutando comando {command}")
+        print(f"Ejecutando comando {command}")
         result = os.popen(command).read()
-        # print(f'Resultado obtenido {result}\n\n')
+        print(f'Resultado obtenido {result}\n\n')
 
         result_json = json.loads(result)
 
