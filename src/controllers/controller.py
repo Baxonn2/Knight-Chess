@@ -28,7 +28,7 @@ class Controller:
 
         my_json = json.dumps(state.__dict__)
         my_json = my_json.translate(str.maketrans({'"': r'\"'}))
-        self.command = f"{self.command_init} '{my_json}' {self.command_end}"
+        self.command = f'{self.command_init} "{my_json}" {self.command_end}'
         
         # El resultado tiene que ser un print de un json
         # print(f"Ejecutando comando {self.command}")

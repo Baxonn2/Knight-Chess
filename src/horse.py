@@ -45,7 +45,7 @@ class Horse:
         self.real_y = self.real_y + (objetive_y - self.real_y) / 5
 
         actual_pos = (self.real_x + self.width/2, self.real_y + self.height/2)
-        objetive_pos = (objetive_x + self.width/2, objetive_y + self.height/2)
+        objetive_pos = (int(objetive_x + self.width/2), int(objetive_y + self.height/2))
 
         pygame.draw.line(surface, (255, 0, 0), actual_pos, objetive_pos, 2)
         pygame.draw.circle(surface, (255,0,0), objetive_pos, 3)
