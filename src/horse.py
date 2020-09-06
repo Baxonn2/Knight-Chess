@@ -76,11 +76,11 @@ class Horse:
         """
         Obtiene las coordenadas del caballo si se aplicara un movimiento pre-
         definido. La numeración de los movimientos es la siguiente:
-                                    + 7 + 0 +
-                                    6 + + + 1
-                                    + + C + +
-                                    5 + + + 2
                                     + 4 + 3 +
+                                    5 + + + 2
+                                    + + C + +
+                                    6 + + + 1
+                                    + 7 + 0 +
 
         Args:
             movement_number (int): Numero del movimiento a realizar

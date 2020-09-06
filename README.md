@@ -60,11 +60,11 @@ Las salidas del controlador no son mas que una salida por consola (un print, pri
 ```
 Notar que el valor de horse_movement va de 0 a 7. Estos valores corresponden a los siguientes movimientos (C es el caballo):
 ```
-     + 7 + 0 +
-     6 + + + 1
-     + + C + +
-     5 + + + 2
      + 4 + 3 +
+     5 + + + 2
+     + + C + +
+     6 + + + 1
+     + 7 + 0 +
 ```
 Un ejemplo de código de un controlador es el siguiente (en python):
 ```python
