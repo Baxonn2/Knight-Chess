@@ -24,6 +24,7 @@ class Enviroment:
     # Pantallas cuando ganan
     player1_win: pygame.image
     player2_win: pygame.image
+    empate: pygame.image
     player_win: pygame.image
 
     # Jugadores
@@ -34,20 +35,33 @@ class Enviroment:
     player1_turn: bool
 
     # Constantes
+    play_count: int
     PLAY_LIMIT = 100
 
     # Tablero de ajedrez
     chessboard: Chessboard
 
+    # Booleana de configuracion para identificar si se grafica el tablero o no
+    graph_mode: bool
+
     def __init__(self, screen_width: int, screen_height: int,
-                       player1_command: str, player2_command: str):
+                       player1_command: str, player2_command: str,
+                       graph_mode=True):
+        self.graph_mode = graph_mode
+    
         # Inicializando pygame
         pygame.init()
-        self.screen = pygame.display.set_mode((screen_width, screen_height))
-        pygame.display.set_caption("Ajedrez")
+
+        if self.graph_mode:
+            self.screen = pygame.display.set_mode((screen_width, screen_height))
+            pygame.display.set_caption("Ajedrez")
+        
         self.screen_height = screen_height
         self.screen_width = screen_width
         s_size = (screen_width, screen_height)
+
+        # Limite de jugadas
+        self.play_count = 0
 
         # Obtienendo directorio para la carga de recursos
         dirname = os.path.dirname(__file__)
@@ -64,6 +78,9 @@ class Enviroment:
         path = os.path.join(dirname, "assets/Player 2 win.png")
         self.player2_win = pygame.image.load(path)
         self.player2_win = pygame.transform.scale(self.player2_win, s_size)
+        path = os.path.join(dirname, "assets/Empate.png")
+        self.empate = pygame.image.load(path)
+        self.empate = pygame.transform.scale(self.empate, s_size)
 
         # Creando jugadores
         self.player1 = Player(Player.PLAYER_ONE,
@@ -119,7 +136,11 @@ class Enviroment:
                 self.chessboard.add_knight(knight)
 
     def launch_turns(self):
-        while not self.winner and not self.done:
+        play_limit = self.PLAY_LIMIT * 2
+
+        while not self.winner and not self.done and self.play_count < play_limit:
+            self.play_count += 1
+
             # Obteniendo jugador en turno
             self.player1_turn = not self.player1_turn
             player = self.player1 if self.player1_turn else self.player2
@@ -178,6 +199,22 @@ class Enviroment:
                 print(f"Player {player.player_number} win")
             # else:
             #     time.sleep(0.1)
+        
+        # Obteniendo ganador por limite de jugadas
+        if self.play_count == play_limit:
+            self.winner = True
+
+            if self.player1.point > self.player2.point:
+                self.the_winner = Player.PLAYER_ONE
+                self.player_win = self.player1_win
+            
+            elif self.player1.point < self.player2.point:
+                self.the_winner = Player.PLAYER_TWO
+                self.player_win = self.player2_win
+            
+            else:
+                self.the_winner = Player.PLAYER_PAR
+                self.player_win = self.empate
 
     def run(self):
         """
@@ -187,7 +224,7 @@ class Enviroment:
         t = threading.Thread(target=self.launch_turns)
         t.start()
 
-        while not self.done:
+        while not self.done and self.graph_mode:
             # Actualizando eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -216,6 +253,7 @@ class Enviroment:
             # Actualizando tablero
             pygame.display.update()
 
+        print("Esperando hilos")
         t.join()
         print("Juego finalizado")
         print("Puntaje del jugador 1: ", self.player1.point)

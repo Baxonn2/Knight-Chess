@@ -15,6 +15,7 @@ class Player:
     # Identificadores del player
     PLAYER_ONE = 1
     PLAYER_TWO = 2
+    PLAYER_PAR = 3
     player_number: int
 
     controller: Controller

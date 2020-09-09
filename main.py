@@ -2,6 +2,10 @@ from src.enviroment import Enviroment
 import sys
 
 if __name__ == "__main__":
+    graph_mode = "-g" in sys.argv
+    if graph_mode:
+        sys.argv.remove("-g")
+    
     # Obteniendo el controlador del segundo player
     try:
         player2_command = sys.argv[2]
@@ -15,6 +19,6 @@ if __name__ == "__main__":
     except IndexError as e:
         print("Player 1 en forma aleatoria")
         player1_command = "python3 random_controller.py"
-    
-    env = Enviroment(400, 400, player1_command, player2_command)
+
+    env = Enviroment(400, 400, player1_command, player2_command, graph_mode)
     env.run()
